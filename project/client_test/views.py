@@ -41,14 +41,23 @@ def client_details(request):
 
 def update_user(request, pk):
     client = get_object_or_404(Client, pk=pk)
+    form = Client_DetailsUpdateForm(instance=client)
+    return render(request, 'client_test/update_user.html', {'form': form,'pk':pk})
+
+def save_updated_user(request):
+    args = {}
     if request.method == 'POST':
+        client = get_object_or_404(Client, email_address=request.POST.get("email_address"))
         form = Client_DetailsUpdateForm(request.POST, instance=client)
         if form.is_valid():
             form.save()
             return redirect('/')
     else:
-        form = Client_DetailsUpdateForm(instance=client)
-        return render(request, 'client_test/update_user.html', {'form': form})
+        form = Client_DetailsUpdateForm()
+
+    args['form'] = form
+    return render(request, 'client_test/update_user.html', args)
+
 
 
 def user_new(request):
