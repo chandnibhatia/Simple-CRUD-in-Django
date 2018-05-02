@@ -15,6 +15,8 @@ def validate_postal_code(value):
         raise ValidationError(_('Postal Code cannot be greater than 9 digit length.'),)
 
 class Client_DetailsForm(forms.ModelForm):
+    phone_number = forms.IntegerField(validators=[validate_min])
+    postcode = forms.IntegerField(validators=[validate_postal_code])
 
     class Meta:
         model = Client

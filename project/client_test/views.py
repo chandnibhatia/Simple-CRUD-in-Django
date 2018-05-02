@@ -1,10 +1,24 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.views import generic
+#from django.views import generic
 from .models import Client
 from django.db.models import Q
 from .forms import Client_DetailsForm, Client_DetailsUpdateForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.template.loader import render_to_string
+from django.contrib import messages
+
+
+# class AjaxTemplateMixin(object):
+#     def dispatch(self, request, *args, **kwargs):
+#         if not hasattr(self, 'ajax_template_name'):
+#             split = self.template_name.split('.html')
+#             split[-1] = '_inner'
+#             split.append('.html')
+#             self.ajax_template_name = ''.join(split)
+#         if request.is_ajax():
+#             self.template_name = self.ajax_template_name
+#         return super(AjaxTemplateMixin, self).dispatch(request, *args, **kwargs)
 
 
 def getPaginator(request,object):
@@ -33,10 +47,11 @@ def client_details(request):
         return render(request, 'client_test/client_details.html', {'client_details': clients})
 
     else:
+        form = Client_DetailsForm()
         client_detail = Client.objects.order_by('client_name')
         clients = getPaginator(request,client_detail)
 
-        return render(request, 'client_test/client_details.html', {'client_details': clients})
+        return render(request, 'client_test/client_details.html', {'client_details': clients,'form':form})
 
 
 def update_user(request, pk):
@@ -51,6 +66,7 @@ def save_updated_user(request):
         form = Client_DetailsUpdateForm(request.POST, instance=client)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User Updated Successfully.')
             return redirect('/')
     else:
         form = Client_DetailsUpdateForm()
@@ -61,17 +77,30 @@ def save_updated_user(request):
 
 
 def user_new(request):
+
+    data = dict()
+
     if request.method == 'POST':
         form = Client_DetailsForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User Added Successfully.')
             return redirect('/')
+        else:
+            data['form_is_valid'] = False
     else:
         form = Client_DetailsForm()
-        return render(request, 'client_test/user_update_add.html', {'form': form})
+
+    context = {'form': form}
+    data['html_form'] = render_to_string('client_test/user_update_add.html',
+        context,
+        request=request
+    )
+    return JsonResponse(data)
 
 
 def delete_user(request, pk):
     client = get_object_or_404(Client, pk=pk)
     client.delete()
+    messages.success(request, 'User Deleted Successfully.')
     return redirect('/')

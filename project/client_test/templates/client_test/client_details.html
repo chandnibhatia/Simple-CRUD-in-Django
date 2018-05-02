@@ -10,6 +10,16 @@
 
 </style>
 <div class="container">
+    {% if messages %}
+        <div class="messages alert alert-success">
+            {% for message in messages %}
+            <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div id="Message">
+        <p></p>
+    </div>
     <div class="well well-sm">
         <h3>Client Details</h3>
     </div>
@@ -17,8 +27,8 @@
         <div>
             <div style="width: 120px;float: right;">
 
-                <a href="{% url 'client_test:user_new' %}" data-toggle="tooltip" title="Add New User"
-                   style="color:white;" class="btn btn-primary">
+                <a href="{% url 'client_test:user_new' %}" data-toggle="modal" data-target="#myModal"
+                   style="color:white;" class="btn btn-primary js-add-button">
                     <span class="glyphicon glyphicon-plus"></span> Add User</a>
 
 
@@ -103,8 +113,77 @@
     $('[data-toggle="tooltip"]').tooltip();
     $("#myTable").tablesorter();
     $("table th").addClass("headerSortUp");
+
+    if(localStorage.getItem("Status"))
+    {
+        $("#Message").addClass("alert alert-success");
+        $("#Message").html("User Added Successfully.");
+        localStorage.clear();
+    }
 });
 
+    $(".js-add-button").on("click", function(event){
+
+        $.ajax({
+            url: '{% url 'client_test:user_new' %}',
+            type: 'get',
+            dataType: 'json',
+            success: function(data){
+                $("#myModal .modal-dialog").html(data['html_form'])
+
+                $("#myForm").on("submit", function(event){
+                    event.preventDefault();
+                    var form = $(this);
+                    $.ajax({
+                        url: '{% url 'client_test:user_new' %}',
+                        type: 'post',
+                        data: form.serialize(),
+                        dataType: 'json',
+                        success: function(data){
+                            if(data['form_is_valid'] = "False")
+                            {
+                                $("#myModal .modal-dialog").html(data['html_form'])
+
+                            }
+                        },
+                        error: function(error){
+
+                            if(error.status == 200)
+                            {
+                                localStorage.setItem("Status","True")
+                                location.reload();
+
+                            }
+                            else
+                            {
+                                $("#Message").addClass("alert alert-danger");
+                                $("#Message").html("An Error Occured", error);
+                            }
+                        }
+                    });
+                });
+
+
+
+            },
+            error: function(error){
+                console.log("modal",error);
+                $("#Message").addClass("alert alert-danger");
+                $("#Message").html("An Error Occured", error);
+            }
+        });
+    });
+
+
+
 </script>
+
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+
+  </div>
+</div>
 </body>
 {% endblock %}

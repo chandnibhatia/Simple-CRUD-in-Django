@@ -1,13 +1,23 @@
-{% extends 'client_test/base.html' %}
+<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add User</h4>
+      </div>
+      <div class="modal-body">
+            <div id="errorMessage">
 
-{% block content %}
-<h1>New User</h1>
-<form method="POST" >
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
+            </div>
+        <form method="POST" id="myForm" action="{% url 'client_test:user_new' %}">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-primary" value="Save" id="save_client">
+                <input type="reset" class="btn btn-primary" value="Reset">
+                <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Close">
+            </div>
+        </form>
+      </div>
+</div>
 
-    </table>
-    <input type="submit" class="btn btn-primary" value="Save">
-</form>
-{% endblock %}
