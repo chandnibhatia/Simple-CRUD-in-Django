@@ -1,23 +1,251 @@
+
 <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Add User</h4>
+        <h4 class="modal-title"></h4>
       </div>
       <div class="modal-body">
             <div id="errorMessage">
 
             </div>
-        <form method="POST" id="myForm" action="{% url 'client_test:user_new' %}">
+        <form method="POST" id="myForm" data-action="{% url 'client_test:user_new' %}" data-action-update="{% url 'client_test:save_updated_user' %}">
             {% csrf_token %}
-            <table>
-                {{ form.as_table }}
-            </table>
+
+            {{ form.non_field_errors }}
+
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+
+                    <label for="{{ form.client_name.id_for_label }}">User Name {% if form.client_name.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="text" class="form-control"  name="{{ form.client_name.name }}" id="{{ form.client_name.id_for_label }}" {% if form.client_name.value != None %} value="{{ form.client_name.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.client_name.field.max_length }}" {% if form.client_name.field.required %}required{% endif %}>
+                    {% if form.client_name.help_text %}
+                        <small class="form-text text-muted helpBlock">
+                            {{ form.client_name.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.client_name.errors %}
+                        {{ form.client_name.errors }}
+                    {% endif %}
+
+                </div>
+                <div class="col-lg-4 col-md-4">
+
+                    <label for="{{ form.contact_name.id_for_label }}">Full Name {% if form.contact_name.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="text" placeholder="First Middle Last" style="width: 268px;" class="form-control"  name="{{ form.contact_name.name }}" id="{{ form.contact_name.id_for_label }}" {% if form.contact_name.value != None %}value="{{ form.contact_name.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.contact_name.field.max_length }}" {% if form.contact_name.field.required %}required{% endif %}>
+                    {% if form.contact_name.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.contact_name.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.contact_name.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.contact_name.errors }}
+                        </small>
+                    {% endif %}
+
+                </div>
+
+            </div>
+              <div class="row">
+                <div class="col-sm-10">
+                    <label for="{{ form.email_address.id_for_label }}">Email Address {% if form.email_address.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="email" placeholder="joe@gmail.com" class="form-control" name="{{ form.email_address.name }}" id="{{ form.email_address.id_for_label }}" {% if form.email_address.value != None %}value="{{ form.email_address.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.email_address.field.max_length }}" {% if form.email_address.field.required %}required{% endif %}>
+                    {% if form.email_address.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.email_address.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.email_address.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.email_address.errors }}
+                        </small>
+                    {% endif %}
+                </div>
+                  </div>
+           <div class="row">
+               <div class="col-xs-3">
+
+                    <div class="input-group">
+                    <label for="{{ form.birth_date.id_for_label }}">Birth Date {% if form.birth_date.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="date" class="form-control" name="{{ form.birth_date.name }}" id="{{ form.birth_date.id_for_label }}" {% if form.birth_date.value != None %}value="{{ form.birth_date.value }}"{% endif %} maxlength="{{ form.birth_date.field.max_length }}" {% if form.birth_date.field.required %}required{% endif %}>
+                        <!--<div class="input-group-btn" style="top: 13px;">
+                        <button class="btn btn-default" type="submit" id="datepicker">
+                            <i  class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </div>-->
+
+                    {% if form.birth_date.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.birth_date.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.birth_date.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.birth_date.errors }}
+                        </small>
+                    {% endif %}
+
+                    </div>
+              </div>
+               <div class="col-xs-3" style="width: auto;">
+
+                    <label for="{{ form.area_code.id_for_label }}">Area Code {% if form.area_code.field.required %}<span class="required">*</span>{% endif %}</label>
+
+                    <input type="tel" placeholder="eg: 0261" style="width: 80px;" class="form-control" name="{{ form.area_code.name }}" id="{{ form.area_code.id_for_label }}" {% if form.area_code.value != None %}value="{{ form.area_code.value }}"{% endif %} maxlength="{{ form.area_code.field.max_length }}" {% if form.area_code.field.required %}required{% endif %}>
+
+                    {% if form.area_code.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.area_code.help_text }}
+                        </small>
+                    {% endif %}
+                   {% if form.area_code.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.area_code.errors }}
+                        </small>
+                    {% endif %}
+                </div>
+                <div class="col-xs-3">
+
+                    <label for="{{ form.phone_number.id_for_label }}">Phone Number {% if form.phone_number.field.required %}<span class="required">*</span>{% endif %}</label>
+
+                    <input type="tel"  placeholder="eg: 2256322" class="form-control phoneField" name="{{ form.phone_number.name }}" id="{{ form.phone_number.id_for_label }}" {% if form.phone_number.value != None %}value="{{ form.phone_number.value }}"{% endif %} maxlength="{{ form.phone_number.field.max_length }}" {% if form.phone_number.field.required %}required{% endif %}>
+                    {% if form.phone_number.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.phone_number.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.phone_number.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.phone_number.errors }}
+                        </small>
+                    {% endif %}
+                </div>
+                <div class="col-xs-3">
+                    <label for="{{ form.mobile_number.id_for_label }}">Mobile Number {% if form.mobile_number.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="tel" placeholder="eg: 08982355664" style="width: 160px;" class="form-control" name="{{ form.mobile_number.name }}" id="{{ form.mobile_number.id_for_label }}" {% if form.mobile_number.value != None %}value="{{ form.mobile_number.value }}"{% endif %} maxlength="{{ form.mobile_number.field.max_length }}" {% if form.mobile_number.field.required %}required{% endif %}>
+                    {% if form.mobile_number.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.mobile_number.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.mobile_number.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.mobile_number.errors }}
+                        </small>
+                    {% endif %}
+                </div>
+
+             </div>
+            <div class="row">
+                <div class="col-sm-10">
+                    <label for="{{ form.street_name.id_for_label }}">Address {% if form.street_name.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="text" placeholder="Apt. name/Number - Landmark" style="height: 40px;width: 467px;" class="form-control" name="{{ form.street_name.name }}" id="{{ form.street_name.id_for_label }}" {% if form.street_name.value != None %}value="{{ form.street_name.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.street_name.field.max_length }}" {% if form.street_name.field.required %}required{% endif %}>
+                    {% if form.street_name.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.street_name.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.street_name.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.street_name.errors }}
+                        </small>
+                    {% endif %}
+                </div></div>
+                <div class="row">
+                <div class="col-sm-10">
+                    <label for="{{ form.suburb.id_for_label }}">Street Name {% if form.suburb.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="text" placeholder="Street Name/Suburb" style="height: 40px;width: 467px;" class="form-control" name="{{ form.suburb.name }}" id="{{ form.suburb.id_for_label }}" {% if form.suburb.value != None %}value="{{ form.suburb.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.suburb.field.max_length }}" {% if form.suburb.field.required %}required{% endif %}>
+                    {% if form.suburb.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.suburb.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.suburb.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.suburb.errors }}
+                        </small>
+                    {% endif %}
+                </div></div>
+           <div class="row">
+               <div class="col-xs-3">
+                    <label for="{{ form.postcode.id_for_label }}">Zip {% if form.postcode.field.required %}<span class="required">*</span>{% endif %}</label>
+                  <input type="text" class="form-control" name="{{ form.postcode.name }}" id="{{ form.postcode.id_for_label }}" {% if form.postcode.value != None %}value="{{ form.postcode.value }}"{% endif %} maxlength="{{ form.postcode.field.max_length }}" {% if form.postcode.field.required %}required{% endif %}>
+                    {% if form.postcode.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.postcode.help_text }}
+                        </small>
+                    {% endif %}
+                   {% if form.postcode.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.postcode.errors }}
+                        </small>
+                    {% endif %}
+                  </div>
+                <div class="col-xs-3" style="width: 115px;">
+                    <label for="{{ form.country.id_for_label }}">Country {% if form.country.field.required %}<span class="required">*</span>{% endif %}</label>
+                    <select name="{{ form.country.name }}" id="{{ form.country.id_for_label }}" data-get-state="{% url 'client_test:get_states' %}" data-get-city="{% url 'client_test:get_cities' %}">
+                        {% for choice in form.country %}
+                            {{ choice }}
+                        {% endfor %}
+                    </select>
+                    <!--<input type="text" class="form-control" name="{{ form.country.name }}" id="{{ form.country.id_for_label }}" {% if form.country.value != None %}value="{{ form.country.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.country.field.max_length }}" {% if form.country.field.required %}required{% endif %}>-->
+
+                    {% if form.country.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.country.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.country.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.country.errors }}
+                        </small>
+                    {% endif %}
+                </div>
+                <div class="col-xs-3">
+                    <label for="{{ form.state.id_for_label }}">State {% if form.state.field.required %}<span class="required">*</span>{% endif %}</label>
+                    <select name="{{ form.state.name }}" id="{{ form.state.id_for_label }}">
+                    {% for statechoice in form.state %}
+                        {{ statechoice }}
+                    {% endfor %}
+                    </select>
+                  <!--<input type="text" class="form-control" name="{{ form.state.name }}" id="{{ form.state.id_for_label }}" {% if form.state.value != None %}value="{{ form.state.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.state.field.max_length }}" {% if form.state.field.required %}required{% endif %}>-->
+                    {% if form.state.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.state.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.state.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.state.errors }}
+                        </small>
+                    {% endif %}
+                </div>
+                <div class="col-xs-3">
+                    <label for="{{ form.city.id_for_label }}">City {% if form.city.field.required %}<span class="required">*</span>{% endif %}</label>
+                    <select name="{{ form.city.name }}" id="{{ form.city.id_for_label }}">
+                    {% for citychoice in form.city %}
+                        {{ citychoice }}
+                    {% endfor %}
+                    </select>
+                  <!--<input type="text" class="form-control" name="{{ form.city.name }}" id="{{ form.city.id_for_label }}" {% if form.city.value != None %}value="{{ form.city.value|stringformat:'s' }}"{% endif %} maxlength="{{ form.city.field.max_length }}" {% if form.city.field.required %}required{% endif %}>-->
+                    {% if form.city.help_text %}
+                        <small class="helpBlock form-text text-muted">
+                            {{ form.city.help_text }}
+                        </small>
+                    {% endif %}
+                    {% if form.city.errors %}
+                        <small class="form-text text-muted has-error">
+                            {{ form.city.errors }}
+                        </small>
+                    {% endif %}
+                </div>
+             </div>
             <div class="modal-footer">
+                <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
                 <input type="submit" class="btn btn-primary" value="Save" id="save_client">
-                <input type="reset" class="btn btn-primary" value="Reset">
-                <input type="button" class="btn btn-secondary" data-dismiss="modal" value="Close">
             </div>
         </form>
+
       </div>
-</div>
+      </div>
 

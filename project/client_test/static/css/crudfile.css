@@ -1,0 +1,30 @@
+.headerSortUp {
+        background: url(http://tablesorter.com/themes/blue/asc.gif) no-repeat 99%;
+}
+.headerSortDown {
+    background: url(http://tablesorter.com/themes/blue/desc.gif) no-repeat 99%;
+}
+.table th {
+    min-width: 130px;
+}
+.errorlist
+{
+      color: red;
+      width: 170px;
+}
+.helpBlock {
+    color: maroon;
+}
+.required {
+    color: red;
+}
+.row{
+    margin-bottom: 15px;
+}
+input.phoneField {
+    display: inline-block;
+
+}
+thead th {
+    cursor: pointer;
+}

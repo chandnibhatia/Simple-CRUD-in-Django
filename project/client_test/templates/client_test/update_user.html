@@ -1,6 +1,10 @@
 {% extends 'client_test/base.html' %}
 
 {% block content %}
+
+<div id="Message">
+        <p></p>
+    </div>
 <h1>Update User</h1>
 <form method="POST" action="{% url 'client_test:save_updated_user' %}">
     {% csrf_token %}
