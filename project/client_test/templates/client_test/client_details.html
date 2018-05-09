@@ -24,13 +24,13 @@
 
             </div>
             <br>
-            <form action="{% url 'client_test:client_details' %}" method="post">
+            <form action="{% url 'client_test:client_details' %}" method="GET" id="js-search-form">
                 {% csrf_token %}
                 <div class="input-group" style="width: 500px;float: left;bottom: 20px;height: 10px;">
                     <input type="search" class="form-control"
                            placeholder="Enter username, email, suburb or phone number...." name="value_placeholder">
                     <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
+                        <button class="btn btn-default" type="button" id="js-search-button">
                             <i class="glyphicon glyphicon-search"></i>
                         </button>
                     </div>
@@ -39,7 +39,9 @@
         </div>
     </div>
     <br>
-    <table class="table tablesorter" id="myTable">
+    <div id="js-get-table">
+
+        <table class="table tablesorter" id="myTable">
         <thead >
         <tr>
             <th >User Name </th>
@@ -49,13 +51,13 @@
             <th >Phone Number </th>
             <th >Mobile Number </th>
             <th >Address </th>
-            <!--<th >Postal </th>-->
-            <!--<th >City </th>-->
-            <!--<th >State </th>-->
-            <!--<th >Country </th>-->
+            <!--&lt;!&ndash;<th >Postal </th>&ndash;&gt;-->
+            <!--&lt;!&ndash;<th >City </th>&ndash;&gt;-->
+            <!--&lt;!&ndash;<th >State </th>&ndash;&gt;-->
+            <!--&lt;!&ndash;<th >Country </th>&ndash;&gt;-->
         </tr>
         </thead>
-        <tbody>
+        <tbody id="get_table_body">
         {% for details in client_details %}
         <tr>
             <td>{{ details.client_name }}</td>
@@ -65,10 +67,7 @@
             <td class="align-middle">{{ details.area_code }} - {{ details.phone_number }}</td>
             <td class="align-middle">{{ details.mobile_number }}</td>
             <td class="align-middle">{{ details.street_name }} , {{ details.suburb }} , {{ details.postcode }} , {{ details.city }} , {{ details.state }} ,{{ details.country }}</td>
-            <!--<td class="align-middle">{{ details.postcode }}</td>-->
-            <!--<td class="align-middle">{{ details.city }}</td>-->
-            <!--<td class="align-middle">{{ details.state }}</td>-->
-            <!--<td class="align-middle">{{ details.country }}</td>-->
+
             <td class="align-middle">
                 <span data-toggle="tooltip"  title="Click to Edit" >
                     <a href="{% url 'client_test:get_updated_user' pk=details.pk %}"  id="js-editUser" data-toggle="modal" data-target="#myModalUpdate">
@@ -106,6 +105,9 @@
         {% endif %}
     </ul>
     {% endif %}
+
+    </div>
+    <!---->
 </div>
 
 <div id="myModal" class="modal fade" role="dialog">

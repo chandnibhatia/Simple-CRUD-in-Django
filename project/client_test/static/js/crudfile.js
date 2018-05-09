@@ -37,7 +37,7 @@ function bindEvents(){
 //            });
 //        } );
 
-        $("a").on("click", function(event){
+        $(document).on("click", "a", function(event){
 
 
             var getId = $(this).attr("id");
@@ -58,12 +58,53 @@ function bindEvents(){
             }
         });
 
+        $("#js-search-form").on("click", function(event){
+
+
+            getUserSearchDetails($(this));
+
+        });
+
+
 }
 
+
+function getUserSearchDetails(object){
+
+    console.log(object);
+    var searchWord = $('#js-search-form  .form-control').val();
+
+//    if(searchWord !== ""){
+
+        $.ajax({
+            url: object.attr("action"),
+            type: 'get',
+            async: false,
+            data: {'value_placeholder':searchWord},
+            dataType: 'json',
+            success: function(data){
+
+                $("#get_table_body").html('');
+                $("#get_table_body").html(data['html_form']);
+
+            },
+            error: function(error){
+
+                console.log(error);
+                $("#Message").addClass("alert alert-danger");
+                $("#Message").html(error.responseText);
+            }
+
+        });
+
+//    }
+
+}
 
 function deleteUser(object){
 
     console.log(object);
+    debugger;
     var url = object.attr("href");
     var pk = object.attr("data-value");
     var ans = confirm("Are you sure you want to delete !");
@@ -80,9 +121,14 @@ function deleteUser(object){
             error: function(error){
 
                 console.log("e",error);
+                $("#Message").addClass("alert alert-danger");
+                $("#Message").html(error.responseText);
 
             }
         });
+    }
+    else{
+
     }
 
 }
@@ -148,6 +194,7 @@ function addUpdateUser(object, id){
                             $(modalName + " .modal-dialog").html(data['html_form']);
 
                         }
+
                     },
                     error: function(error){
 

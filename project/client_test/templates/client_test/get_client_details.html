@@ -1,0 +1,26 @@
+        {% if client_details %}
+        {% for details in client_details %}
+        <tr>
+            <td>{{ details.client_name }}</td>
+            <td class="align-middle">{{ details.contact_name }}</td>
+            <td class="align-middle">{{ details.birth_date }}</td>
+            <td class="align-middle">{{ details.email_address }}</td>
+            <td class="align-middle">{{ details.area_code }} - {{ details.phone_number }}</td>
+            <td class="align-middle">{{ details.mobile_number }}</td>
+            <td class="align-middle">{{ details.street_name }} , {{ details.suburb }} , {{ details.postcode }} , {{ details.city }} , {{ details.state }} ,{{ details.country }}</td>
+
+            <td class="align-middle">
+                <span data-toggle="tooltip"  title="Click to Edit" >
+                    <a href="{% url 'client_test:get_updated_user' pk=details.pk %}"  id="js-editUser" data-toggle="modal" data-target="#myModalUpdate">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </span>
+            </td>
+            <td class="align-middle">
+                <a href="{% url 'client_test:delete_user' pk=details.pk %}" data-toggle="tooltip" title="Delete" id="js-deleteUser">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}

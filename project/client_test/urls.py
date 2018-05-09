@@ -19,7 +19,8 @@ from . import views
 app_name = 'client_test'
 
 urlpatterns = [
-    path('', views.client_details, name='client_details'),
+    path('', views.home, name='home'),
+    path('get/user/details', views.client_details, name='client_details'),
 	path('user/new', views.user_new, name='user_new'),
     path('user/update', views.save_updated_user, name='save_updated_user'),
     path('user/get_updated_user/<int:pk>',views.get_updated_user, name='get_updated_user'),

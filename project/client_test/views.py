@@ -31,27 +31,34 @@ def get_cities(request):
     cities = City.objects.filter(state=state_id).order_by('name')
     return render(request, 'client_test/cities.html', {'cities': cities})
 
+def home(request):
+    client_detail = Client.objects.order_by('client_name')
+    clients = getPaginator(request, client_detail)
+    return render(request,'client_test/client_details.html',{'client_details':clients})
+
 
 def client_details(request):
-    if request.POST:
-        field_value = request.POST.get('value_placeholder')
-        if field_value:
-            clients = Client.objects.filter(
-                Q(client_name__contains=field_value) | Q(email_address__contains=field_value) | Q(
-                    phone_number__contains=field_value) | Q(suburb__contains=field_value) | Q(
-                    mobile_number__contains=field_value))
-        else:
-            client_detail = Client.objects.order_by('client_name')
-            clients = getPaginator(request, client_detail)
+    data = dict()
+    field_value = request.GET.get('value_placeholder')
+    print(field_value)
 
-        return render(request, 'client_test/client_details.html', {'client_details': clients})
+    if field_value:
+        clients = Client.objects.filter(Q(client_name__contains=field_value) | Q(email_address__contains=field_value) | Q(phone_number__contains=field_value) | Q(suburb__contains=field_value) | Q(mobile_number__contains=field_value))
+
+        context = {'client_details': clients}
+        data['html_form'] = render_to_string('client_test/get_client_details.html',context,request=request)
+
+        return JsonResponse(data)
 
     else:
-        form = Client_DetailsForm()
         client_detail = Client.objects.order_by('client_name')
         clients = getPaginator(request, client_detail)
+        context = {'client_details': clients}
+        data['html_form'] = render_to_string('client_test/get_client_details.html',context,request=request)
 
-        return render(request, 'client_test/client_details.html', {'client_details': clients, 'form': form})
+        return JsonResponse(data)
+
+
 
 
 def save_updated_user(request):
@@ -62,7 +69,7 @@ def save_updated_user(request):
         client = get_object_or_404(Client, email_address=request.POST.get("email_address"))
         form = Client_DetailsUpdateForm(request.POST, instance=client)
         if form.is_valid():
-            
+
             form.save()
             return redirect('/')
         else:
